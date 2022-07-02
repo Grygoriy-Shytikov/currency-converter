@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+
+import { getUAH, getApi, currentDate2 } from "./api";
+
+import GlobalStyle from "./components/GlobalStyle";
+import Header from "./components/Header";
+import Conversion from "./components/Сonversion";
 
 function App() {
+  const [isloading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getApi().then((resulut) => {
+      setIsLoading(false);
+      let res = resulut;
+      res.push(getUAH);
+      return setData(res);
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GlobalStyle />
+      <Header isloading={isloading} data={data} currentDate={currentDate2} />
+      <Conversion data={data} isloading={isloading} />
     </div>
   );
 }
